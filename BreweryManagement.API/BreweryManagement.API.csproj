@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\BreweryManagement.Infrastructure\BreweryManagement.Infrastructure.csproj" />
+    <ProjectReference Include="..\BreweryManagement.Infrastructure\BreweryManagement.Infrastructure.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
