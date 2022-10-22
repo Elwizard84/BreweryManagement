@@ -14,6 +14,6 @@ namespace BreweryManagement.Domain.Models
         [Required]
         public float Price { get; set; }
         [Required]
-        public Brewery Brewery { get; set; }
+        public Brewer Brewer { get; set; }
     }
 }

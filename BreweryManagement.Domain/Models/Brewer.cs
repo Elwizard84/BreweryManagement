@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BreweryManagement.Domain.Models
 {
-    public class Brewery : BaseModel
+    public class Brewer : BaseModel
     {
     }
 }
