@@ -2,6 +2,7 @@
 using BreweryManagement.Domain.Repositories;
 using BreweryManagement.Infrastructure.Enums;
 using BreweryManagement.Infrastructure.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -110,16 +111,17 @@ namespace BreweryManagement.Infrastructure.Services
         public dynamic GetQuote(dynamic request)
         {
             string wholeSalerId = request.WholeSalerId as string;
-            List<dynamic> beers = request.QuoteDetails as List<dynamic>;
+            List<dynamic> beers = new List<dynamic>(request.QuoteDetails);
 
             // check if wholesaler exists
             var dbSaler = _wholeSalerService.GetWholeSaler(wholeSalerId);
             if (dbSaler == null)
                 throw new ValidationException("The wholesaler must exist");
 
-            List<string> beerIds = beers.Select(b => b.Id as string).ToList();
-            List<WholeSalerBeer> stockBeers = _wholeSalerBeerRepository.WholeSalerBeers.Where(wsb => wsb.WholeSaler.Id == wholeSalerId &&
-                                                                   beerIds.Contains(wsb.Beer.Id)).ToList();
+            List<string> beerIds = beers.Select(b => b.BeerId as string).ToList();
+            List<WholeSalerBeer> stockBeers = _wholeSalerBeerRepository.WholeSalerBeers
+                .Include(wsb => wsb.Beer)
+                .Where(wsb => wsb.WholeSaler.Id == wholeSalerId && beerIds.Contains(wsb.Beer.Id)).ToList();
 
             // check if wholesaler sells these beer
             var stockBeerIds = stockBeers.Select(b => b.Beer.Id).ToList();
@@ -133,17 +135,17 @@ namespace BreweryManagement.Infrastructure.Services
                 throw new ValidationException($"The number of beers ordered cannot be greater than the wholesaler's stock: {string.Join(',', lowStock.Select(b => b.BeerId))}");
 
             // Discount
-            float discount = 0;
+            double discount = 1;
             if (beers.Sum(b => b.Quantity) > 20)
-                discount = 0.2f;
-            if (beers.Sum(b => b.Quantity) > 20)
-                discount = 0.1f;
+                discount -= 0.2;
+            else if (beers.Sum(b => b.Quantity) > 10)
+                discount -= 0.1;
 
             return new
             {
-                Beers = stockBeers.Select(sb => new { sb.Beer.Name, beers.Single(b => b.BeerID == sb.Beer.Id).Quantity, sb.Beer.Price }),
-                Discount = discount * 100,
-                Total = stockBeers.Sum(sb => sb.Beer.Price * beers.Single(b => b.BeerID == sb.Beer.Id).Quantity) * discount
+                Beers = stockBeers.Select(sb => new { sb.Beer.Name, beers.Single(b => b.BeerId == sb.Beer.Id).Quantity, sb.Beer.Price }),
+                Discount = (1 - discount) * 100,
+                Total = stockBeers.Sum(sb => (double)beers.Single(b => b.BeerId == sb.Beer.Id).Quantity * sb.Beer.Price) * discount
             };
         }
     }

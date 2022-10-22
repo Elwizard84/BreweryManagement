@@ -3,10 +3,10 @@
     public class WholeSalerQuoteRequest
     {
         public string WholeSalerId { get; set; }
-        public List<BeerQuantiy> QuoteDetails { get; set; }
+        public List<BeerQuantity> QuoteDetails { get; set; }
     }
 
-    public class BeerQuantiy
+    public class BeerQuantity
     {
         public string BeerId { get; set; }
         public int Quantity { get; set; }
