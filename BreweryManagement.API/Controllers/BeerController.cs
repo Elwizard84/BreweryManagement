@@ -1,4 +1,4 @@
-﻿using BreweryManagement.API.Contracts.Requests;
+﻿using BreweryManagement.API.Contracts.Requests.Beer;
 using BreweryManagement.Domain.Models;
 using BreweryManagement.Infrastructure.Exceptions;
 using BreweryManagement.Infrastructure.Services;
@@ -114,6 +114,37 @@ namespace BreweryManagement.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message, new { beerId, brewerId });
+                return StatusCode(422, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Sell beer to wholesaler
+        /// </summary>
+        /// <param name="request">Sale details</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("SellToWholesaler")]
+        [ValidateAntiForgeryToken]
+        [ProducesResponseType(typeof(Beer), 201)]
+        [ProducesResponseType(typeof(string), 401)]
+        [ProducesResponseType(typeof(string), 422)]
+        public ActionResult SellToWholesaler([FromBody] SellToWholeSalerRequest request)
+        {
+            try
+            {
+                _beerService.SellToWholesaler(request.WholeSalerId, request.BeerId, request.Quantity);
+
+                return Accepted();
+            }
+            catch (ObjectNotFoundException nex)
+            {
+                _logger.LogInformation(nex.Message, request);
+                return StatusCode(401, nex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message, request);
                 return StatusCode(422, ex.Message);
             }
         }

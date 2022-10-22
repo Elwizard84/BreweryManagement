@@ -11,6 +11,7 @@ namespace BreweryManagement.Infrastructure.Services
 {
     public interface IWholeSalerBeerService
     {
+        WholeSalerBeer? GetBeerStock(WholeSaler wholeSaler, Beer beer, out WholeSaler? dbSaler, out Beer? dbBeer);
         void UpdateBeerStock(WholeSaler wholeSaler, Beer beer, int quantity);
     }
 
@@ -26,22 +27,28 @@ namespace BreweryManagement.Infrastructure.Services
             _wholeSalerBeerRepository = wholeSalerBeerRepository;
         }
 
-        public void UpdateBeerStock(WholeSaler wholeSaler, Beer beer, int quantity)
+        public WholeSalerBeer? GetBeerStock(WholeSaler wholeSaler, Beer beer, out WholeSaler? dbSaler, out Beer? dbBeer)
         {
             // check if wholesaler exists
-            WholeSaler? dbSaler = _wholeSalerService.GetSholeSaler(wholeSaler.Id);
+            dbSaler = _wholeSalerService.GetWholeSaler(wholeSaler.Id);
             if (dbSaler == null)
-                throw new UnauthorizedException("Wholesaler was not found");
+                throw new ObjectNotFoundException("Wholesaler was not found");
+            string dbSalerId = dbSaler.Id;
 
             // check if beer exists
-            Beer? dbBeer = _beerService.GetById(beer.Id);
+            dbBeer = _beerService.GetById(beer.Id);
             if (dbBeer == null)
-                throw new Exception("Beer does not exist");
+                throw new ObjectNotFoundException("Beer does not exist");
+            string dbBeerId = dbBeer.Id;
 
-            // Update or Add stock
-            WholeSalerBeer? dbWsBeer = _wholeSalerBeerRepository.WholeSalerBeers.FirstOrDefault(b =>
-                                                                        b.WholeSaler.Id == dbSaler.Id &&
-                                                                        b.Beer.Id == dbBeer.Id);
+            return _wholeSalerBeerRepository.WholeSalerBeers.FirstOrDefault(b =>
+                                                                        b.WholeSaler.Id == dbSalerId &&
+                                                                        b.Beer.Id == dbBeerId);
+        }
+
+        public void UpdateBeerStock(WholeSaler wholeSaler, Beer beer, int quantity)
+        {
+            WholeSalerBeer? dbWsBeer = GetBeerStock(wholeSaler, beer, out WholeSaler? dbSaler, out Beer? dbBeer);
 
             if (dbWsBeer == null)
             {

@@ -10,7 +10,7 @@ namespace BreweryManagement.Infrastructure.Services
 {
     public interface IWholeSalerService
     {
-        WholeSaler? GetSholeSaler(string id);
+        WholeSaler? GetWholeSaler(string id);
     }
 
     public class WholeSalerService : IWholeSalerService
@@ -22,7 +22,7 @@ namespace BreweryManagement.Infrastructure.Services
             _wholeSalerRepository = wholeSalerRepository;
         }
 
-        public WholeSaler? GetSholeSaler(string id)
+        public WholeSaler? GetWholeSaler(string id)
         {
             return _wholeSalerRepository.WholeSalers.FirstOrDefault(x => x.Id == id);
         }

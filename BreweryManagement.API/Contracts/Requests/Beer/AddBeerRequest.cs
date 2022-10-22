@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BreweryManagement.API.Contracts.Requests
+namespace BreweryManagement.API.Contracts.Requests.Beer
 {
     public class AddBeerRequest
     {

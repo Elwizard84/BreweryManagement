@@ -15,17 +15,23 @@ namespace BreweryManagement.Infrastructure.Services
         Beer AddBeer(Beer beer);
         void RemoveBeer(string beerId, string brewerId);
         Beer? GetById(string id);
+        void SellToWholesaler(string wholeSalerId, string beerId, int quantity);
     }
 
     public class BeerService : IBeerService
     {
         private readonly BeerRepository _beerRepository;
         private readonly IBrewerService _brewerService;
+        private readonly IWholeSalerBeerService _wholeSalerBeerService;
 
-        public BeerService(BeerRepository beerRepository, IBrewerService brewerService)
+        public BeerService(
+            BeerRepository beerRepository, 
+            IBrewerService brewerService,
+            IWholeSalerBeerService wholeSalerBeerService)
         {
             _beerRepository = beerRepository;
             _brewerService = brewerService;
+            _wholeSalerBeerService = wholeSalerBeerService;
         }
 
         public Beer AddBeer(Beer beer)
@@ -73,6 +79,26 @@ namespace BreweryManagement.Infrastructure.Services
         public Beer? GetById(string id)
         {
             return _beerRepository.Beers.FirstOrDefault(b => b.Id == id);
+        }
+
+        public void SellToWholesaler(string wholeSalerId, string beerId, int quantity)
+        {
+            WholeSalerBeer? stock = _wholeSalerBeerService.GetBeerStock(new WholeSaler()
+            {
+                Id = wholeSalerId,
+            }, new Beer()
+            {
+                Id = beerId,
+            }, out WholeSaler? dbSaler, out Beer? dbBeer);
+
+            if (stock != null)
+            {
+                _wholeSalerBeerService.UpdateBeerStock(dbSaler, dbBeer, stock.Quantity + quantity);
+            } 
+            else
+            {
+                _wholeSalerBeerService.UpdateBeerStock(dbSaler, dbBeer, quantity);
+            }
         }
     }
 }
