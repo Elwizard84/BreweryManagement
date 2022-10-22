@@ -7,9 +7,9 @@ namespace BreweryManagement.API.Contracts.Requests.Beer
         [Required]
         public string BeerName { get; set; }
         [Required]
-        public float BeerAlcoholContent { get; set; }
+        public decimal BeerAlcoholContent { get; set; }
         [Required]
-        public float BeerPrice { get; set; }
+        public decimal BeerPrice { get; set; }
         [Required]
         public string BrewerId { get; set; }
     }

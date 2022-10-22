@@ -3,6 +3,7 @@ using BreweryManagement.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BreweryManagement.Domain.Migrations
 {
     [DbContext(typeof(BaseRepository))]
-    partial class BaseRepositoryModelSnapshot : ModelSnapshot
+    [Migration("20221022162124_UpgradedDB")]
+    partial class UpgradedDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

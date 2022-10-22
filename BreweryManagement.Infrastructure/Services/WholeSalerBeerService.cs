@@ -135,17 +135,17 @@ namespace BreweryManagement.Infrastructure.Services
                 throw new ValidationException($"The number of beers ordered cannot be greater than the wholesaler's stock: {string.Join(',', lowStock.Select(b => b.BeerId))}");
 
             // Discount
-            double discount = 1;
+            decimal discount = 1;
             if (beers.Sum(b => b.Quantity) > 20)
-                discount -= 0.2;
+                discount -= (decimal)0.2;
             else if (beers.Sum(b => b.Quantity) > 10)
-                discount -= 0.1;
+                discount -= (decimal)0.1;
 
             return new
             {
                 Beers = stockBeers.Select(sb => new { sb.Beer.Name, beers.Single(b => b.BeerId == sb.Beer.Id).Quantity, sb.Beer.Price }),
                 Discount = (1 - discount) * 100,
-                Total = stockBeers.Sum(sb => (double)beers.Single(b => b.BeerId == sb.Beer.Id).Quantity * sb.Beer.Price) * discount
+                Total = stockBeers.Sum(sb => (decimal)beers.Single(b => b.BeerId == sb.Beer.Id).Quantity * sb.Beer.Price) * discount
             };
         }
     }

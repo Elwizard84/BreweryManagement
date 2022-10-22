@@ -10,9 +10,9 @@ namespace BreweryManagement.Domain.Models
     public class Beer : BaseModel
     {
         [Required]
-        public float AlcoholContent { get; set; }
+        public decimal AlcoholContent { get; set; }
         [Required]
-        public float Price { get; set; }
+        public decimal Price { get; set; }
         [Required]
         public Brewer Brewer { get; set; }
     }
