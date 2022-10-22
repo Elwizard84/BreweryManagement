@@ -57,7 +57,7 @@ namespace BreweryManagement.Infrastructure.Services
 
             // validate no wholesalers have stock
             if (true)
-                throw new Exception("Beer is still in wholesalre stock. Cannot remove");
+                throw new Exception("Beer is still in wholesaler stock. Cannot remove");
 
             // Remove Beer
             _beerRepository.Remove(beer);
