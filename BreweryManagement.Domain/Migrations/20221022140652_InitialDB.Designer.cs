@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BreweryManagement.Domain.Migrations
 {
     [DbContext(typeof(BaseRepository))]
-    [Migration("20221022133145_InitialDB")]
+    [Migration("20221022140652_InitialDB")]
     partial class InitialDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,6 +85,9 @@ namespace BreweryManagement.Domain.Migrations
 
             modelBuilder.Entity("BreweryManagement.Domain.Models.WholeSalerBeer", b =>
                 {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("BeerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)");
@@ -94,6 +97,8 @@ namespace BreweryManagement.Domain.Migrations
 
                     b.Property<string>("WholeSalerId")
                         .HasColumnType("nvarchar(128)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("BeerId");
 

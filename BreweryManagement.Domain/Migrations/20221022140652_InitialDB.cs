@@ -57,12 +57,14 @@ namespace BreweryManagement.Domain.Migrations
                 name: "WholeSalerBeers",
                 columns: table => new
                 {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     WholeSalerId = table.Column<string>(type: "nvarchar(128)", nullable: true),
                     BeerId = table.Column<string>(type: "nvarchar(128)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_WholeSalerBeers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_WholeSalerBeers_Beers_BeerId",
                         column: x => x.BeerId,

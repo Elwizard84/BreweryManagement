@@ -48,7 +48,6 @@ namespace BreweryManagement.API.Controllers
         /// <param name="request">Beer details</param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [ProducesResponseType(typeof(Beer), 201)]
         [ProducesResponseType(typeof(string), 401)]
         [ProducesResponseType(typeof(string), 422)]
@@ -88,7 +87,7 @@ namespace BreweryManagement.API.Controllers
         /// <param name="brewerId">Unique GUID of the Brewer</param>
         /// <returns></returns>
         [HttpDelete]
-        [ValidateAntiForgeryToken]
+        [Route("{beerId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(string), 401)]
         [ProducesResponseType(typeof(string), 404)]

@@ -1,6 +1,7 @@
 ﻿using BreweryManagement.Domain.Models;
 using BreweryManagement.Domain.Repositories;
 using BreweryManagement.Infrastructure.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace BreweryManagement.Infrastructure.Services
         public void RemoveBeer(string beerId, string brewerId)
         {
             // Validate beer exists
-            Beer? beer = _beerRepository.Beers.FirstOrDefault(b => b.Id == beerId);
+            Beer? beer = _beerRepository.Beers.Include(b => b.Brewer).FirstOrDefault(b => b.Id == beerId);
             if (beer == null)
                 throw new ObjectNotFoundException("Requested beer was not found");
 

@@ -59,7 +59,6 @@ namespace BreweryManagement.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("SellToWholesaler")]
-        [ValidateAntiForgeryToken]
         [ProducesResponseType(typeof(Beer), 201)]
         [ProducesResponseType(typeof(string), 401)]
         [ProducesResponseType(typeof(string), 422)]
@@ -90,7 +89,6 @@ namespace BreweryManagement.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("GetQuote")]
-        [ValidateAntiForgeryToken]
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(string), 401)]

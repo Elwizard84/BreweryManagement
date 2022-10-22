@@ -31,8 +31,7 @@ namespace BreweryManagement.Domain.Repositories
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<WholeSalerBeer>()
-                //.HasKey(c => new { c.WholeSaler,  c.Beer });
-                .HasNoKey();
+                .HasKey(c => c.Id);
         }
     }
 }
