@@ -63,7 +63,7 @@ namespace BreweryManagement.API.Controllers
                     Price = request.BeerPrice,
                     Brewer = new Brewer()
                     {
-                        Id = request.BrewerId
+                        Id = request.BrewerId // This is dependent on Brewer for further Authorization and validation
                     }
                 });
 
@@ -82,7 +82,7 @@ namespace BreweryManagement.API.Controllers
         }
 
         /// <summary>
-        /// Remove an existing beer
+        /// Remove an existing beer, this is dependent on Brewer for further Authorization and validation
         /// </summary>
         /// <param name="beerId">Unique GUID of the Beer</param>
         /// <param name="brewerId">Unique GUID of the Brewer</param>

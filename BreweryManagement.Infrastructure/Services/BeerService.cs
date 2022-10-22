@@ -14,14 +14,15 @@ namespace BreweryManagement.Infrastructure.Services
         IEnumerable<Beer> GetByBrewer(string brewerId);
         Beer AddBeer(Beer beer);
         void RemoveBeer(string beerId, string brewerId);
+        Beer? GetById(string id);
     }
 
     public class BeerService : IBeerService
     {
         private readonly BeerRepository _beerRepository;
-        private readonly BrewerService _brewerService;
+        private readonly IBrewerService _brewerService;
 
-        public BeerService(BeerRepository beerRepository, BrewerService brewerService)
+        public BeerService(BeerRepository beerRepository, IBrewerService brewerService)
         {
             _beerRepository = beerRepository;
             _brewerService = brewerService;
@@ -67,6 +68,11 @@ namespace BreweryManagement.Infrastructure.Services
         public IEnumerable<Beer> GetByBrewer(string brewerId)
         {
             return _beerRepository.Beers.Where(b => b.Brewer.Id == brewerId);
+        }
+
+        public Beer? GetById(string id)
+        {
+            return _beerRepository.Beers.FirstOrDefault(b => b.Id == id);
         }
     }
 }
