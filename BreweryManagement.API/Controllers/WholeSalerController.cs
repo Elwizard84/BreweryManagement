@@ -41,7 +41,7 @@ namespace BreweryManagement.API.Controllers
                 }, new Beer()
                 {
                     Id = request.BeerId
-                }, request.NewQuantity);
+                }, request.NewQuantity, Infrastructure.Enums.UpdateMode.Strict);
 
                 return Accepted();
             }

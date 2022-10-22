@@ -1,5 +1,6 @@
 ﻿using BreweryManagement.Domain.Models;
 using BreweryManagement.Domain.Repositories;
+using BreweryManagement.Infrastructure.Enums;
 using BreweryManagement.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace BreweryManagement.Infrastructure.Services
     {
         WholeSalerBeer? GetWholeSalerStock(WholeSaler wholeSaler);
         WholeSalerBeer? GetBeerStock(WholeSaler wholeSaler, Beer beer, out WholeSaler? dbSaler, out Beer? dbBeer);
-        void UpdateBeerStock(WholeSaler wholeSaler, Beer beer, int quantity);
+        void UpdateBeerStock(WholeSaler wholeSaler, Beer beer, int quantity, UpdateMode upMode);
         void SellToWholesaler(string wholeSalerId, string beerId, int quantity);
         dynamic GetQuote(dynamic request);
     }
@@ -65,7 +66,7 @@ namespace BreweryManagement.Infrastructure.Services
                                                                         b.Beer.Id == dbBeerId);
         }
 
-        public void UpdateBeerStock(WholeSaler wholeSaler, Beer beer, int quantity)
+        public void UpdateBeerStock(WholeSaler wholeSaler, Beer beer, int quantity, UpdateMode upMode)
         {
             WholeSalerBeer? dbWsBeer = GetBeerStock(wholeSaler, beer, out WholeSaler? dbSaler, out Beer? dbBeer);
 
@@ -80,7 +81,15 @@ namespace BreweryManagement.Infrastructure.Services
                 _wholeSalerBeerRepository.Add(newWsBeer);
             } else
             {
-                dbWsBeer.Quantity = quantity;
+                switch(upMode)
+                {
+                    case UpdateMode.Strict:
+                        dbWsBeer.Quantity = quantity;
+                        break;
+                    case UpdateMode.Incremental:
+                        dbWsBeer.Quantity += quantity;
+                        break;
+                }
                 _wholeSalerBeerRepository.Update(dbWsBeer);
             }
 
@@ -89,22 +98,13 @@ namespace BreweryManagement.Infrastructure.Services
 
         public void SellToWholesaler(string wholeSalerId, string beerId, int quantity)
         {
-            WholeSalerBeer? stock = GetBeerStock(new WholeSaler()
+            UpdateBeerStock(new WholeSaler()
             {
                 Id = wholeSalerId,
             }, new Beer()
             {
                 Id = beerId,
-            }, out WholeSaler? dbSaler, out Beer? dbBeer);
-
-            if (stock != null)
-            {
-                UpdateBeerStock(dbSaler, dbBeer, stock.Quantity + quantity);
-            }
-            else
-            {
-                UpdateBeerStock(dbSaler, dbBeer, quantity);
-            }
+            }, quantity, UpdateMode.Incremental);
         }
 
         public dynamic GetQuote(dynamic request)
