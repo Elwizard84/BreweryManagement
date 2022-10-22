@@ -23,10 +23,10 @@ namespace BreweryManagement.Domain.Repositories
             optionsBuilder.UseSqlServer(_config.GetConnectionString("Default"));
         }
 
-        public DbSet<Beer> Beers { get; set; }
-        public DbSet<Brewer> Brewers { get; set; }
-        public DbSet<WholeSaler> WholeSalers { get; set; }
-        public DbSet<WholeSalerBeer> WholeSalerBeers { get; set; }
+        public virtual DbSet<Beer> Beers { get; set; }
+        public virtual DbSet<Brewer> Brewers { get; set; }
+        public virtual DbSet<WholeSaler> WholeSalers { get; set; }
+        public virtual DbSet<WholeSalerBeer> WholeSalerBeers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
