@@ -62,10 +62,6 @@ namespace BreweryManagement.Infrastructure.Services
             if (beer.Brewer.Id != brewerId)
                 throw new UnauthorizedException("Brewer not allowed to remove this beer");
 
-            // validate no wholesalers have stock
-            if (true)
-                throw new Exception("Beer is still in wholesaler stock. Cannot remove");
-
             // Remove Beer
             _beerRepository.Remove(beer);
             _beerRepository.SaveChanges();
