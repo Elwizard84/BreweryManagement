@@ -15,9 +15,9 @@ namespace BreweryManagement.Infrastructure.Services
 
     public class WholeSalerService : IWholeSalerService
     {
-        private readonly WholeSalerRepository _wholeSalerRepository;
+        private readonly BaseRepository _wholeSalerRepository;
 
-        public WholeSalerService(WholeSalerRepository wholeSalerRepository)
+        public WholeSalerService(BaseRepository wholeSalerRepository)
         {
             _wholeSalerRepository = wholeSalerRepository;
         }

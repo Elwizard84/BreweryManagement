@@ -1,4 +1,4 @@
-﻿namespace BreweryManagement.API.Contracts.Requests.Beer
+﻿namespace BreweryManagement.API.Contracts.Requests.WholeSale
 {
     public class SellToWholeSalerRequest
     {

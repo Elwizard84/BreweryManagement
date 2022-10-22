@@ -15,9 +15,9 @@ namespace BreweryManagement.Infrastructure.Services
 
     public class BrewerService : IBrewerService
     {
-        private readonly BrewerRepository _brewerRepository;
+        private readonly BaseRepository _brewerRepository;
 
-        public BrewerService(BrewerRepository brewerRepository)
+        public BrewerService(BaseRepository brewerRepository)
         {
             _brewerRepository = brewerRepository;
         }

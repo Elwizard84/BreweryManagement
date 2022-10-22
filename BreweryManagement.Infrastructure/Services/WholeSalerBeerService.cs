@@ -15,6 +15,7 @@ namespace BreweryManagement.Infrastructure.Services
         WholeSalerBeer? GetWholeSalerStock(WholeSaler wholeSaler);
         WholeSalerBeer? GetBeerStock(WholeSaler wholeSaler, Beer beer, out WholeSaler? dbSaler, out Beer? dbBeer);
         void UpdateBeerStock(WholeSaler wholeSaler, Beer beer, int quantity);
+        void SellToWholesaler(string wholeSalerId, string beerId, int quantity);
         dynamic GetQuote(dynamic request);
     }
 
@@ -22,10 +23,14 @@ namespace BreweryManagement.Infrastructure.Services
     {
         private readonly IBeerService _beerService;
         private readonly IWholeSalerService _wholeSalerService;
-        private readonly WholeSalerBeerRepository _wholeSalerBeerRepository;
+        private readonly BaseRepository _wholeSalerBeerRepository;
 
-        public WholeSalerBeerService(IWholeSalerService wholeSalerService, WholeSalerBeerRepository wholeSalerBeerRepository)
+        public WholeSalerBeerService(
+            IWholeSalerService wholeSalerService,
+            IBeerService beerService,
+            BaseRepository wholeSalerBeerRepository)
         {
+            _beerService = beerService;
             _wholeSalerService = wholeSalerService;
             _wholeSalerBeerRepository = wholeSalerBeerRepository;
         }
@@ -80,6 +85,26 @@ namespace BreweryManagement.Infrastructure.Services
             }
 
             _wholeSalerBeerRepository.SaveChanges();
+        }
+
+        public void SellToWholesaler(string wholeSalerId, string beerId, int quantity)
+        {
+            WholeSalerBeer? stock = GetBeerStock(new WholeSaler()
+            {
+                Id = wholeSalerId,
+            }, new Beer()
+            {
+                Id = beerId,
+            }, out WholeSaler? dbSaler, out Beer? dbBeer);
+
+            if (stock != null)
+            {
+                UpdateBeerStock(dbSaler, dbBeer, stock.Quantity + quantity);
+            }
+            else
+            {
+                UpdateBeerStock(dbSaler, dbBeer, quantity);
+            }
         }
 
         public dynamic GetQuote(dynamic request)

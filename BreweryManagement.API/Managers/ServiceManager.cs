@@ -26,10 +26,7 @@ namespace BreweryManagement.API.Managers
             });
 
             // Add DbContext
-            services.AddDbContext<BeerRepository>(options => { });
-            services.AddDbContext<BrewerRepository>(options => { });
-            services.AddDbContext<WholeSalerRepository>(options => { });
-            services.AddDbContext<WholeSalerBeerRepository>(options => { });
+            services.AddDbContext<BaseRepository>(options => { });
 
             // Add services
             services.AddTransient<IBeerService, BeerService>();

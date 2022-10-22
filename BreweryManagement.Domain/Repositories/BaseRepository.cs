@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BreweryManagement.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,18 @@ namespace BreweryManagement.Domain.Repositories
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_config.GetConnectionString("Default"));
+        }
+
+        public DbSet<Beer> Beers { get; set; }
+        public DbSet<Brewer> Brewers { get; set; }
+        public DbSet<WholeSaler> WholeSalers { get; set; }
+        public DbSet<WholeSalerBeer> WholeSalerBeers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<WholeSalerBeer>()
+                //.HasKey(c => new { c.WholeSaler,  c.Beer });
+                .HasNoKey();
         }
     }
 }

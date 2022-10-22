@@ -13,12 +13,12 @@ namespace BreweryManagement.API.Controllers
     [Route("[controller]")]
     public class WholeSalerController : ControllerBase
     {
-        private readonly IWholeSalerBeerService _woleSalerBeerService;
+        private readonly IWholeSalerBeerService _wholeSalerBeerService;
         private readonly ILogger<BeerController> _logger;
 
-        public WholeSalerController(IWholeSalerBeerService woleSalerBeerService, ILogger<BeerController> logger)
+        public WholeSalerController(IWholeSalerBeerService wholeSalerBeerService, ILogger<BeerController> logger)
         {
-            _woleSalerBeerService = woleSalerBeerService;
+            _wholeSalerBeerService = wholeSalerBeerService;
             _logger = logger;
         }
 
@@ -35,7 +35,7 @@ namespace BreweryManagement.API.Controllers
         {
             try
             {
-                _woleSalerBeerService.UpdateBeerStock(new WholeSaler()
+                _wholeSalerBeerService.UpdateBeerStock(new WholeSaler()
                 {
                     Id = request.WholeSalerId
                 }, new Beer()
@@ -48,6 +48,37 @@ namespace BreweryManagement.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, null);
+                return StatusCode(422, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Sell beer to wholesaler
+        /// </summary>
+        /// <param name="request">Sale details</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("SellToWholesaler")]
+        [ValidateAntiForgeryToken]
+        [ProducesResponseType(typeof(Beer), 201)]
+        [ProducesResponseType(typeof(string), 401)]
+        [ProducesResponseType(typeof(string), 422)]
+        public ActionResult SellToWholesaler([FromBody] SellToWholeSalerRequest request)
+        {
+            try
+            {
+                _wholeSalerBeerService.SellToWholesaler(request.WholeSalerId, request.BeerId, request.Quantity);
+
+                return Accepted();
+            }
+            catch (ObjectNotFoundException nex)
+            {
+                _logger.LogInformation(nex.Message, request);
+                return StatusCode(401, nex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message, request);
                 return StatusCode(422, ex.Message);
             }
         }
@@ -79,7 +110,7 @@ namespace BreweryManagement.API.Controllers
                 }
 
                 // Get quote
-                return Ok(_woleSalerBeerService.GetQuote(request));
+                return Ok(_wholeSalerBeerService.GetQuote(request));
             }
             catch (ValidationException vex)
             {
